@@ -1,8 +1,7 @@
-'use client'
-
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { fetchWithAuth } from "../lib/auth";
+'use client';
+import { useEffect, useState } from 'react';
+import { fetchWithAuth } from '../../lib/auth';
+import { useRouter } from 'next/navigation';
 
 type Note = {
   id: number;
@@ -11,10 +10,10 @@ type Note = {
   author: number;
 };
 
-export default function Home() {
+export default function NotesPage() {
+  const [notes, setNotes] = useState([]);
   const router = useRouter();
-  const [notes, setNotes] = useState<Note[]>([]); 
-  
+
   useEffect(() => {
     const fetchNotes = async () => {
       try {
@@ -36,14 +35,13 @@ export default function Home() {
   }, [router]); 
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
+    <div>
+      <h1>Your Notes</h1>
       <ul>
         {notes.map((note: Note) => (
           <li key={note.id}>{note.content}</li>
         ))}
       </ul>
-
-      <button className="button">New Note</button>
     </div>
   );
 }
