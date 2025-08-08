@@ -1,4 +1,6 @@
 import Navbar from './components/Navbar'
+import { UserProvider } from '../context/UserContext';
+import './globals.css';
 
 export const metadata = {
   title: 'Next.js',
@@ -12,8 +14,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Navbar />
-      <body>{children}</body>
+      <body>
+        <UserProvider>
+          <Navbar />
+          {children}
+        </UserProvider>
+      </body>
     </html>
   )
 }
