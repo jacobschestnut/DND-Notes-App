@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.urls import path, include
-from api.views import CreateUserView, NoteDelete, NoteListCreate
+from api.views import CreateUserView, NoteDelete, NoteListCreate, UserView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
+    path('user/', UserView.as_view(), name='user'),
     path('notes/', NoteListCreate.as_view(), name='note-list-create'),
     path('notes/<int:pk>/', NoteDelete.as_view(), name='note-delete'),
     path('register/', CreateUserView.as_view(), name='user-register'),
