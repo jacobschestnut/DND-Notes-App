@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { clearTokens } from '../../lib/auth';
 import { useUser } from '../../context/UserContext';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,7 +20,7 @@ export default function LoginPage() {
   return (
     <nav className="navbar bg-base-100 shadow-sm">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">DND Notes</a>
+        <Link href="/" className="btn btn-ghost text-xl">DND Notes</Link>
       </div>
       <div className="flex-none">
         {user && (
@@ -29,7 +30,7 @@ export default function LoginPage() {
                 <summary>{user.username}</summary>
                 <ul className="bg-base-100 rounded-t-none p-2">
                   <li><a onClick={handleLogout}>Logout</a></li>
-                  <li><a>My Notes</a></li>
+                  {/* <li><a>My Notes</a></li> */}
                 </ul>
               </details>
             </li>
