@@ -13,37 +13,74 @@ type Note = {
 
 export default function Home() {
   const router = useRouter();
-  const [notes, setNotes] = useState<Note[]>([]); 
-  
-  useEffect(() => {
-    const fetchNotes = async () => {
-      try {
-        const res = await fetchWithAuth('http://localhost:8000/notes/');
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [newNoteContent, setNewNoteContent] = useState('');
 
-        if (!res || !res.ok) {
-          console.error('Failed to fetch notes');
-          return;
-        }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-        const data = await res.json();
-        setNotes(data)
-      } catch (error) {
-        console.error('Error fetching notes:', error);
+    try {
+      await fetchWithAuth('http://localhost:8000/notes/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content: newNoteContent }),
+      });
+
+      setNewNoteContent('')
+      
+      await fetchNotes();
+    } catch (error) {
+      console.error('Error creating note:', error);
+    }
+  };
+
+  const fetchNotes = async () => {
+    try {
+      const res = await fetchWithAuth('http://localhost:8000/notes/');
+
+      if (!res || !res.ok) {
+        console.error('Failed to fetch notes');
+        return;
       }
-    };
 
+      const data = await res.json();
+      setNotes(data);
+    } catch (error) {
+      console.error('Error fetching notes:', error);
+    }
+  };
+
+  useEffect(() => {
     fetchNotes();
-  }, [router]); 
+  }, [router]);
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <ul>
-        {notes.map((note: Note) => (
-          <li key={note.id}>{note.content}</li>
-        ))}
-      </ul>
+    <div className="flex justify-center items-center">
+      <div className="w-1/4 h-1/4">
+        <form onSubmit={handleSubmit}>
+          <fieldset className="fieldset">
+            <textarea
+              className="textarea h-full w-full"
+              placeholder="What's going on?"
+              value={newNoteContent}
+              onChange={(e) => setNewNoteContent(e.target.value)}
+              required
+            />
+          </fieldset>
 
-      <button className="button">New Note</button>
+          <button className="btn btn-primary w-full" type="submit">Submit</button>
+        </form>
+
+        <div className="">
+          <ul>
+            {notes.map((note: Note) => (
+              <li key={note.id}>{note.content}{note.created_at}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }
